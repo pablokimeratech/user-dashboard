@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NavBar from "./NavBar";
 import UserManagement from "./UserManagement";
+import TextTagger from "./TextTagger";
 
 export default function Body() {
   const [selectedTab, setSelectedTab] = useState("text");
@@ -21,6 +22,15 @@ export default function Body() {
           } absolute left-[60px] w-[calc(100%-60px)] h-full`}
         >
           <UserManagement />{" "}
+        </div>
+      )}
+      {selectedTab === "text" && (
+        <div
+          className={`${
+            showTabNames && "bg-[#ACAAAC]"
+          } absolute left-[60px] w-[calc(100%-60px)] h-full`}
+        >
+          <TextTagger />{" "}
         </div>
       )}
     </div>
