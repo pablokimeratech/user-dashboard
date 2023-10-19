@@ -1,5 +1,7 @@
 import { useState } from "react";
 import DictionaryView from "./DictionaryView";
+//images
+import Add from "./assets/plus.svg?react";
 
 export default function EditTextDictionary() {
   const [things, setThings] = useState({
@@ -88,15 +90,32 @@ export default function EditTextDictionary() {
       current = current[path[i]];
     }
 
-    parent[path[path.length - 1]] = Object.assign({ NewProperty: {} }, current);
+    // Verificar si estamos agregando una propiedad a nivel más alto
+    if (path.length === 0) {
+      updatedThings[newName] = {};
+    } else {
+      parent[path[path.length - 1]] = Object.assign({ [newName]: {} }, current);
+    }
+
     setThings(updatedThings);
+    setNewName("");
   };
 
   return (
     <>
-      <button onClick={() => addProperty([])}>
-        Añadir Propiedad a nivel principal
-      </button>
+      <div className="relative w-fit mt-3 mb-3 hover:scale-105 transition-all">
+        <button
+          onClick={() => addProperty([])}
+          className="text-sm bg-[#60378D] text-white pr-7 font-medium pl-3 py-0.5 rounded-full"
+        >
+          Añadir etiqueta a nivel más alto
+        </button>
+        <Add className="w-[14px] h-auto fill-white absolute right-2 top-[4px]" />
+      </div>
+      {/* <Add
+        className="w-5 h-auto fill-green-500"
+        onClick={() => addProperty([])}
+      /> */}
 
       {showInput ? (
         <div>
