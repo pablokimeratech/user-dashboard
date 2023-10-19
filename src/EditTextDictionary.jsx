@@ -41,19 +41,17 @@ export default function EditTextDictionary() {
   const [newName, setNewName] = useState("");
   const [oldName, setOldName] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const [newProperty, setNewProperty] = useState("");
+  const [addingProperty, setAddingProperty] = useState(false);
 
   const handleNameChange = (path) => {
     setOldName(path);
     setShowInput(true);
-    setNewName(path[path.length - 1]);
   };
 
   const confirmNameChange = () => {
     const updatedThings = { ...things };
     let current = updatedThings;
 
-    // Navegar por la ruta para llegar al objeto que se actualizará
     for (let i = 0; i < oldName.length - 1; i++) {
       current = current[oldName[i]];
     }
@@ -62,16 +60,21 @@ export default function EditTextDictionary() {
     delete current[oldName[oldName.length - 1]];
 
     setThings(updatedThings);
-    setNewName("");
     setShowInput(false);
     setOldName([]);
+    setNewName("");
+  };
+
+  const cancelNameChange = () => {
+    setShowInput(false);
+    setOldName([]);
+    setNewName("");
   };
 
   const deleteProperty = (path) => {
     const updatedThings = { ...things };
     let current = updatedThings;
 
-    // Navegar por la ruta para llegar al objeto que se eliminará
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]];
     }
@@ -81,29 +84,46 @@ export default function EditTextDictionary() {
   };
 
   const addProperty = (path) => {
-    const updatedThings = { ...things };
-    let current = updatedThings;
-    let parent = updatedThings;
+    setAddingProperty(true);
+    setShowInput(true);
+  };
 
-    for (let i = 0; i < path.length; i++) {
-      parent = current;
-      current = current[path[i]];
+  const confirmAddProperty = () => {
+    if (newName.trim() !== "") {
+      const updatedThings = { ...things };
+
+      if (oldName.length === 0) {
+        // Agregar propiedad a nivel principal
+        updatedThings[newName] = {};
+      } else {
+        let current = updatedThings;
+        let parent = updatedThings;
+
+        for (let i = 0; i < oldName.length; i++) {
+          parent = current;
+          current = current[oldName[i]];
+        }
+
+        parent[oldName[oldName.length - 1]] = Object.assign(
+          { [newName]: {} },
+          current
+        );
+      }
+
+      setThings(updatedThings);
+      setNewName("");
+      setAddingProperty(false);
     }
+  };
 
-    // Verificar si estamos agregando una propiedad a nivel más alto
-    if (path.length === 0) {
-      updatedThings[newName] = {};
-    } else {
-      parent[path[path.length - 1]] = Object.assign({ [newName]: {} }, current);
-    }
-
-    setThings(updatedThings);
+  const cancelAddProperty = () => {
+    setAddingProperty(false);
     setNewName("");
   };
 
   return (
     <>
-      <div className="relative w-fit mt-3 mb-3 hover:scale-105 transition-all">
+      {/* <div className="relative w-fit mt-3 mb-3 hover:scale-105 transition-all">
         <button
           onClick={() => addProperty([])}
           className="text-sm bg-[#60378D] text-white pr-7 font-medium pl-3 py-0.5 rounded-full"
@@ -111,20 +131,39 @@ export default function EditTextDictionary() {
           Añadir etiqueta a nivel más alto
         </button>
         <Add className="w-[14px] h-auto fill-white absolute right-2 top-[4px]" />
-      </div>
-      {/* <Add
-        className="w-5 h-auto fill-green-500"
-        onClick={() => addProperty([])}
-      /> */}
-
+      </div> */}
+      {showInput && addingProperty ? (
+        <div>
+          <input
+            type="text"
+            placeholder="Nuevo nombre de propiedad"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+          />
+          <button onClick={confirmAddProperty}>Confirmar</button>
+          <button onClick={cancelAddProperty}>Cancelar</button>
+        </div>
+      ) : (
+        <div
+          className="relative w-fit mt-3 mb-3 hover:scale-105 transition-all"
+          onClick={() => addProperty([])}
+        >
+          <button className="text-sm bg-[#60378D] text-white pr-7 font-medium pl-3 py-0.5 rounded-full">
+            Añadir etiqueta a nivel más alto
+          </button>
+          <Add className="w-[14px] h-auto fill-white absolute right-2 top-[4px]" />
+        </div>
+      )}
       {showInput ? (
         <div>
           <input
             type="text"
+            placeholder="Nuevo nombre"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
           />
           <button onClick={confirmNameChange}>Confirmar Cambio</button>
+          <button onClick={cancelNameChange}>Cancelar Cambio</button>
         </div>
       ) : null}
       <DictionaryView
