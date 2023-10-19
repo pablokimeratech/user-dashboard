@@ -4,6 +4,8 @@ import ArrowDown from "./assets/arrow-down.svg?react";
 import Email from "./assets/envelope-regular.svg?react";
 import Cancel from "./assets/ban-solid.svg?react";
 import User from "./assets/user-management.svg?react";
+import Warning from "./assets/warning2.svg?react";
+import Xmark from "./assets/xmark.svg?react";
 //functions and hooks
 import { useState } from "react";
 //components
@@ -144,7 +146,26 @@ export default function UserManagement() {
           </div>
         </div>
       </div>
-      <ModalSetup showModal={showModal} setShowModal={setShowModal} />
+      <ModalSetup showModal={showModal} setShowModal={setShowModal}>
+        <div className="flex flex-col px-8 pt-3">
+          <div className="flex justify-between items-center">
+            <p className="text-[#E6A44D] text-xl mb-3 font-semibold tracking-tight ">
+              ¡IMPORTANTE!
+            </p>
+            {/* <Xmark
+              className="w-4 cursor-pointer h-auto fill-gray-500"
+              onClick={closeModal}
+            /> */}
+          </div>
+          <p className="text-sm font-semibold my-2 mb-4">
+            ¿Estás seguro de que quieres cancelar el proceso 1? Este proceso no
+            es reversible.
+          </p>
+          <div className="flex w-full justify-center">
+            <Warning className="w-[120px] h-auto fill-[#E6A44D]" />
+          </div>
+        </div>{" "}
+      </ModalSetup>
     </div>
   );
 }

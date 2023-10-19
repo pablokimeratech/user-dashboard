@@ -33,7 +33,7 @@ export default function StepTwoNewDictionary() {
   };
 
   return (
-    <div className="w-fit mt-10 border border-[#D5D4D5] rounded-lg px-10 py-8 text-sm">
+    <div className="w-fit rounded-lg px-10  pb-8 text-sm">
       <p>
         A continuación añade las etiquetas principales, y después podrás añadir
         subeqtiquetas.

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 //images
-import Warning from "./assets/warning2.svg?react";
-import Xmark from "./assets/xmark.svg?react";
 
 ReactModal.setAppElement("#root");
 
-export function ModalSetup({ showModal, setShowModal }) {
+export function ModalSetup({ showModal, setShowModal, children }) {
   const [transitionModal, setTransitionModal] = useState(false);
   const customStyles = {
     content: {
@@ -53,31 +51,20 @@ export function ModalSetup({ showModal, setShowModal }) {
       style={customStyles}
       contentLabel="example"
     >
-      <div className="flex flex-col px-8 pt-3">
-        <div className="flex justify-between items-center">
-          <p className="text-[#E6A44D] text-xl mb-3 font-semibold tracking-tight ">
-            ¡IMPORTANTE!
-          </p>
-          <Xmark
-            className="w-4 cursor-pointer h-auto fill-gray-500"
-            onClick={closeModal}
-          />
-        </div>
-        <p className="text-sm font-semibold my-2 mb-4">
-          ¿Estás seguro de que quieres cancelar el proceso 1? Este proceso no es
-          reversible.
-        </p>
-        <div className="flex w-full justify-center">
-          <Warning className="w-[120px] h-auto fill-[#E6A44D]" />
-        </div>
-        <div className="w-full text-end mt-4">
-          <button
-            className="border border-[#E6A44D] rounded-full px-3 py-1 text-[#E6A44D] font-semibold hover:bg-[#E6A44D] hover:text-white transition-all hover:scale-110"
-            onClick={closeModal}
-          >
-            Confirmar
-          </button>
-        </div>
+      {children}
+      <div className="flex w-full justify-end text-sm mt-4 gap-4">
+        <button
+          className="text-[#E6A44D] hover:underline hover:underline-offset-3"
+          onClick={closeModal}
+        >
+          Cancelar
+        </button>
+        <button
+          className="border border-[#E6A44D] rounded-full px-3 py-1 text-[#E6A44D] font-semibold hover:bg-[#E6A44D] hover:text-white transition-all hover:scale-110"
+          onClick={closeModal}
+        >
+          Confirmar
+        </button>
       </div>
     </ReactModal>
   );
