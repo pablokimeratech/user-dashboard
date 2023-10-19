@@ -6,105 +6,10 @@ import TagImage from "./TagImage";
 import Add from "./assets/plus.svg?react";
 import { ModalSetup } from "./ModalSetup";
 import Select from "react-select";
+import EditTextDictionary from "./EditTextDictionary";
 //libraries
 
-// const things = {
-//   animal: {
-//     dog: {
-//       dalmata: {
-//         baby: {},
-//         adult: {},
-//       },
-//       bulldog: {},
-//       labrador: {},
-//       poodle: {
-//         white: {},
-//         black: {},
-//       },
-//     },
-//     cat: {
-//       white: {},
-//       black: {},
-//     },
-//     frog: {
-//       green: {},
-//       blue: {},
-//     },
-//   },
-//   person: {
-//     white: {},
-//     "african american": {},
-//     asian: {},
-//     latino: {},
-//   },
-//   TV: {
-//     LG: {},
-//     Samsung: {},
-//   },
-// };
-
-const TreeView = ({ data, onNameChange, onDeleteProperty, path = [] }) => (
-  <ul className="tree">
-    {Object.keys(data).map((key) => (
-      <li key={key}>
-        <span className="node">{key}</span>
-        <button onClick={() => onNameChange([...path, key])}>
-          Cambiar Nombre
-        </button>
-        <button onClick={() => onDeleteProperty([...path, key])}>
-          Eliminar
-        </button>
-        {data[key] && Object.keys(data[key]).length > 0 && (
-          <TreeView
-            data={data[key]}
-            onNameChange={onNameChange}
-            onDeleteProperty={onDeleteProperty}
-            path={[...path, key]}
-          />
-        )}
-      </li>
-    ))}
-  </ul>
-);
-
 export default function TextTagger() {
-  const [things, setThings] = useState({
-    animal: {
-      dog: {
-        dalmata: {
-          baby: {},
-          adult: {},
-        },
-        bulldog: {},
-        goldenRetriever: {}, // Cambiamos 'labrador' a 'goldenRetriever'
-        poodle: {
-          white: {},
-          black: {},
-        },
-      },
-      cat: {
-        white: {},
-        black: {},
-      },
-      frog: {
-        green: {},
-        blue: {},
-      },
-    },
-    person: {
-      white: {},
-      africanAmerican: {},
-      asian: {},
-      latino: {},
-    },
-    TV: {
-      LG: {},
-      Samsung: {},
-    },
-  });
-  const [newName, setNewName] = useState("");
-  const [oldName, setOldName] = useState("");
-  const [showInput, setShowInput] = useState(false);
   const [showModal, setShowModal] = useState({
     tagImg: false,
     createDictionaryStepOne: false,
@@ -116,59 +21,6 @@ export default function TextTagger() {
     { name: "Animales", id: 3, value: "Animales", label: "Animales" },
     { name: "Casas", id: 4, value: "Casas", label: "Casas" },
   ];
-
-  const handleNameChange = (path) => {
-    setOldName(path);
-    setShowInput(true);
-    setNewName(path[path.length - 1]);
-  };
-
-  const confirmNameChange = () => {
-    const updatedThings = { ...things };
-    let current = updatedThings;
-
-    // Navegar por la ruta para llegar al objeto que se actualizará
-    for (let i = 0; i < oldName.length - 1; i++) {
-      current = current[oldName[i]];
-    }
-
-    current[newName] = current[oldName[oldName.length - 1]];
-    delete current[oldName[oldName.length - 1]];
-
-    setThings(updatedThings);
-    setNewName("");
-    setShowInput(false);
-    setOldName([]);
-  };
-
-  const deleteProperty = (path) => {
-    const updatedThings = { ...things };
-    let current = updatedThings;
-
-    // Navegar por la ruta para llegar al objeto que se eliminará
-    for (let i = 0; i < path.length - 1; i++) {
-      current = current[path[i]];
-    }
-
-    delete current[path[path.length - 1]];
-    setThings(updatedThings);
-  };
-
-  // const [pathToUpdate, setPathToUpdate] = useState([]);
-
-  // useEffect(() => {
-  //   console.log("things son:", things);
-  //   for (const propiedad in things) {
-  //     if (typeof things[propiedad] === "object") {
-  //       let objeto = things[propiedad];
-  //       console.log(`${propiedad}`, "tiene un objeto");
-  //       for (const propiedad in objeto)
-  //         if (typeof objeto[propiedad] === "object") {
-  //           console.log(objeto[propiedad], "esta dentrisimo");
-  //         }
-  //     }
-  //   }
-  // }, []);
 
   return (
     <div className="px-5 py-3 flex flex-col h-full overflow-auto">
@@ -222,21 +74,7 @@ export default function TextTagger() {
             <p className="text-sm font-medium">
               Diccionario <span className="italic">things</span>
             </p>
-            {showInput ? (
-              <div>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                />
-                <button onClick={confirmNameChange}>Confirmar Cambio</button>
-              </div>
-            ) : null}
-            <TreeView
-              data={things}
-              onNameChange={handleNameChange}
-              onDeleteProperty={deleteProperty}
-            />
+            <EditTextDictionary />
           </div>
         </div>
       </div>
@@ -250,11 +88,6 @@ export default function TextTagger() {
         <StepOneNewDictionary />
         <StepTwoNewDictionary />
       </ModalSetup>
-      {/* <ModalSetup
-        showModal={showModal.createDictionaryStepTwo}
-        setShowModal={setShowModal}
-      >
-      </ModalSetup> */}
     </div>
   );
 }
